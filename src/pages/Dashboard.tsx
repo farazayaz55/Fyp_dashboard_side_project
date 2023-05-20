@@ -22,16 +22,22 @@ const data = [
 const Dashboard: React.FC = () => {
   const router = useRouter();
 
-  useEffect(() => {
+
+  const checkUser =  () => {
     const user = Cookies.get("User");
     if (!user) {
-      router.replace("/");
+      void router.replace("/");
     }
+  };
+
+  useEffect(() => {
+     void checkUser()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSignOut = () => {
     Cookies.remove("User");
-    router.replace("/");
+     void router.replace("/");
   };
 
   return (

@@ -1,7 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import Alert from "~/Components/alert";
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
@@ -21,7 +20,7 @@ const Home: NextPage = () => {
     if (email === "awais@gmail.com" && password === "12345678") {
 
       Cookies.set("User",email)
-      router.push("/Dashboard")
+      void router.push("/Dashboard")
     } else {
       if (email !== "awais@gmail.com") {
         setErrorMessage("Email is wrong");
