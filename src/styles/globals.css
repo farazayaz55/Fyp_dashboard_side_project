@@ -2,4 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+#DBPage{
+    flex:1
+}
+
 

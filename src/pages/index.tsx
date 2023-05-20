@@ -4,12 +4,25 @@ import { FormEvent, useState } from "react";
 import Alert from "~/Components/alert";
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
+import {useEffect} from 'react'
 
 
 const Home: NextPage = () => {
   const router = useRouter();
   const [showWarning, setShowWarning] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const checkUser =  () => {
+    const user = Cookies.get("User");
+    if (user) {
+      void router.replace("/Dashboard");
+    }
+  };
+
+  useEffect(() => {
+    void checkUser()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
