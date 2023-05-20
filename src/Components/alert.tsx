@@ -4,7 +4,6 @@ interface AlertProps {
     showWarning: boolean;
     errorMessage: string;
     setShowWarning: React.Dispatch<React.SetStateAction<boolean>>;
-    setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   }
   
 
@@ -12,7 +11,6 @@ const Alert: React.FC<AlertProps> = ({
     showWarning,
     errorMessage,
     setShowWarning,
-    setErrorMessage
 }) => {
 
       //to hide warning message after 5 seconds
