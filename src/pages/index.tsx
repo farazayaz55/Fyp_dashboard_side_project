@@ -16,8 +16,8 @@ const Home: NextPage = () => {
     e.preventDefault();
     const form = event?.target as HTMLFormElement;
     const formData = new FormData(form);
-    const email = formData.get("email") as String;
-    const password = formData.get("password") as String;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
     if (email === "awais@gmail.com" && password === "12345678") {
 
       Cookies.set("User",email)
