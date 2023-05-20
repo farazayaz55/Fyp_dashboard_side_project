@@ -47,7 +47,6 @@ const Home: NextPage = () => {
         {showWarning && (
           <Alert
             showWarning={showWarning}
-            setErrorMessage={setErrorMessage}
             setShowWarning={setShowWarning}
             errorMessage={errorMessage}
           />
