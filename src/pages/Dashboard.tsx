@@ -1,6 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+
+
+
+
 import Head from "next/head";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { getDatabase, ref, onValue } from "firebase/database";
 import {
   LineChart,
   Line,
@@ -11,17 +25,90 @@ import {
   Legend,
 } from "recharts";
 import { useRouter } from "next/router";
-const data = [
-  { name: "Jan", value: 50 },
-  { name: "Feb", value: 100 },
-  { name: "Mar", value: 80 },
-  { name: "Apr", value: 120 },
-  { name: "May", value: 90 },
-];
+import { debounce } from "lodash";
+
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCi06RZhGYuCbAfIrqfvFfssMITICAeC1o",
+  authDomain: "dummy-data-774b0.firebaseapp.com",
+  databaseURL: "https://dummy-data-774b0-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "dummy-data-774b0",
+  storageBucket: "dummy-data-774b0.appspot.com",
+  messagingSenderId: "70173763691",
+  appId: "1:70173763691:web:d2c173a7824ffd4de0e92e",
+  measurementId: "G-YCYK6DT0BT"
+};
+
+// Initialize Firebase
+ initializeApp(firebaseConfig);
+
+
+const database = getDatabase();
+
 
 const Dashboard: React.FC = () => {
   const router = useRouter();
 
+  const [data,setData]=useState(Array.from({ length: 100 }, (_, index) => ({
+    name: (index + 1).toString(),
+    value: 0,
+  })))
+
+
+  const checkLogic=(updatedData:any) => {
+    if(updatedData){
+      for (let i=0;i<100;i++){
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if(updatedData[i])
+        {
+          continue
+        }
+        else{
+          return false
+        }
+      }
+      return true
+    }
+  }
+
+
+  const trickleValues=(updatedValue:any,receivedValue:number ) => {
+    
+    for(let i=0;i<99;i++){
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      updatedValue[i].value=updatedValue[i+1].value
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    updatedValue[99].value=receivedValue
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return updatedValue
+  }
+  
+  const handleValueChange = (snapshot: { val: () => number; }) => {
+    const received = snapshot.val();
+    // setSensorValue(data);
+   
+    let updatedData = [...data];
+
+
+
+    if (updatedData && checkLogic(updatedData) && updatedData[99] && updatedData[99].value!=received  ) {
+
+      //push data
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      updatedData= trickleValues(updatedData,received)
+      setData(updatedData);
+
+    }
+  }
+
+  const sensorRef = ref(database, "Sensor/Reading1");
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+  const debouncedHandleValueChange = debounce(handleValueChange, 1000); // Adjust the delay as needed (e.g., 1000 milliseconds = 1 second)
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+onValue(sensorRef, debouncedHandleValueChange);
 
   const checkUser =  () => {
     const user = Cookies.get("User");

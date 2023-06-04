@@ -12,6 +12,14 @@ const tailwind_playground:NextPage = () => {
   </Head>
 
 
+    <main className="flex  min-h-screen bg-gradient-to-b from-[#2e026d] to-[#15162c]" id="DBPage">
+      <div className='grid grid-cols-3 grid-rows-3 flex-1'>
+        <div className='col-span-2 row-span-2'>
+            <p className='text-yellow-200 font-serif text-sm w-full text-center'>2rows 2 column</p>
+        </div>
+      </div>
+    </main>
+
     </>
   )
 }
